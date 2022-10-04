@@ -2,6 +2,7 @@ package com.deepconverse.chatbot
 
 enum class DeepConverseErrors {
     SDKInitializationError,
-    InvalidParameters
+    InvalidParameters,
+    InvalidSession
 }
 

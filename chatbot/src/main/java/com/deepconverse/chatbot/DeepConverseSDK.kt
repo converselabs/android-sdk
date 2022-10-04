@@ -4,13 +4,15 @@ import android.net.Uri
 import java.lang.Exception
 
 class DeepConverseSDK (
-    var session: Session,
+    var session: DeepConverseSession,
     var callbacks: DeepConverseCallbacks
 ) {
 
     init {
         createSession()
     }
+
+    private var botUri: Uri? = null
 
     private fun createSession() {
         if (session.subdomian.isEmpty() || session.botname.isEmpty()) {
@@ -19,7 +21,7 @@ class DeepConverseSDK (
         }
         val uri = createUrl(session.subdomian, session.botname, session.metadata)
         uri?.let {
-            openBot(it)
+            botUri = it
         } ?: run {
             callbacks.didFailToLoadBot(DeepConverseErrors.InvalidParameters)
         }
@@ -40,7 +42,12 @@ class DeepConverseSDK (
         }
     }
 
-    private fun openBot(uri: Uri) {
+    fun open() {
+        botUri?.let {
 
+        } ?: run {
+            callbacks.didFailToLoadBot(DeepConverseErrors.InvalidSession)
+            return
+        }
     }
 }

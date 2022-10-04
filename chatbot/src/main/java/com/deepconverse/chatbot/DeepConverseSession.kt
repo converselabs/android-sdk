@@ -1,6 +1,6 @@
 package com.deepconverse.chatbot
 
-data class Session(
+data class DeepConverseSession(
     var subdomian: String,
     var botname: String,
     var metadata: HashMap<String, String>,
