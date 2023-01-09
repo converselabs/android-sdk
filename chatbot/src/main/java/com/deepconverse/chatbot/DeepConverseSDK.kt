@@ -1,5 +1,7 @@
 package com.deepconverse.chatbot
 
+import android.app.Activity
+import android.content.Intent
 import android.net.Uri
 import java.lang.Exception
 
@@ -27,12 +29,17 @@ class DeepConverseSDK (
         }
     }
 
-    private fun createUrl(subdomain: String, botname: String, context: HashMap<String, String>): Uri? {
+    private fun createUrl(subdomain: String, botName: String, context: HashMap<String, String>): Uri? {
         return try {
+            val hostname = "$subdomain-$botName.deepconverse.com"
             val builder = Uri.Builder()
             builder.scheme("https")
-                .authority(subdomain)
-                .appendPath(botname)
+                .authority("cdn.converseapps.com")
+                .appendPath("v1")
+                .appendPath("assets")
+                .appendPath("widget")
+                .appendPath("embedded-chatbot")
+                .appendQueryParameter("hostname",hostname)
             context.forEach {
                 builder.appendQueryParameter(it.key, it.value)
             }
@@ -42,9 +49,11 @@ class DeepConverseSDK (
         }
     }
 
-    fun open() {
+    fun open(context: Activity) {
         botUri?.let {
-
+            val intent = Intent(context.applicationContext, Deepconverse::class.java)
+            intent.putExtra(Deepconverse.URI_PARAM, it.toString())
+            context.startActivity(intent)
         } ?: run {
             callbacks.didFailToLoadBot(DeepConverseErrors.InvalidSession)
             return

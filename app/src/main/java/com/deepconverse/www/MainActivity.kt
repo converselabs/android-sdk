@@ -1,5 +1,6 @@
 package com.deepconverse.www
 
+import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.widget.Button
@@ -7,6 +8,7 @@ import com.deepconverse.chatbot.DeepConverseCallbacks
 import com.deepconverse.chatbot.DeepConverseErrors
 import com.deepconverse.chatbot.DeepConverseSDK
 import com.deepconverse.chatbot.DeepConverseSession
+import com.deepconverse.chatbot.Deepconverse
 
 class MainActivity : AppCompatActivity(), DeepConverseCallbacks {
 
@@ -17,10 +19,13 @@ class MainActivity : AppCompatActivity(), DeepConverseCallbacks {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
+        val items = HashMap<String, String>()
+        items["draft"] = "true"
+
         val session = DeepConverseSession(
-            subdomian = "",
-            botname = "",
-            metadata = HashMap()
+            subdomian = "dcshow1",
+            botname = "showbot",
+            metadata = items
         )
         deepConverseSDK = DeepConverseSDK(
             session = session,
@@ -33,7 +38,7 @@ class MainActivity : AppCompatActivity(), DeepConverseCallbacks {
     }
 
     private fun open() {
-        deepConverseSDK.open()
+        deepConverseSDK.open(context = this)
     }
 
     override fun didCloseBot() {
