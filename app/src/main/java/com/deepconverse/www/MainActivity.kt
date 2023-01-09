@@ -1,6 +1,5 @@
 package com.deepconverse.www
 
-import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.widget.Button
@@ -8,7 +7,6 @@ import com.deepconverse.chatbot.DeepConverseCallbacks
 import com.deepconverse.chatbot.DeepConverseErrors
 import com.deepconverse.chatbot.DeepConverseSDK
 import com.deepconverse.chatbot.DeepConverseSession
-import com.deepconverse.chatbot.Deepconverse
 
 class MainActivity : AppCompatActivity(), DeepConverseCallbacks {
 
