@@ -3,3 +3,13 @@ plugins {
     id 'com.android.application' version '8.0.2' apply false
     id 'com.android.library' version '8.0.2' apply false
 }
+
+allprojects {
+    repositories {
+        maven { url 'https://jitpack.io' }
+    }
+}
+
+dependencies {
+    implementation 'com.github.converselabs:android-sdk:Tag'
+}
