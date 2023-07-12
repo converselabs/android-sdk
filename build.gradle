@@ -6,10 +6,8 @@ plugins {
 
 allprojects {
     repositories {
+        google()
         maven { url 'https://jitpack.io' }
+        mavenCentral()
     }
-}
-
-dependencies {
-    implementation 'com.github.converselabs:android-sdk:Tag'
 }

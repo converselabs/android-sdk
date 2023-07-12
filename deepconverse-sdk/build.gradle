@@ -36,15 +36,18 @@ dependencies {
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.5.1'
 }
 
-publishing {
-    publications {
-        release(MavenPublication) {
-            groupId = 'com.github.converselabs'
-            artifactId = 'android-sdk'
-            version = '0.1.0'
-
-            afterEvaluate {
+afterEvaluate {
+    publishing {
+        publications {
+            // Creates a Maven publication called "release".
+            release(MavenPublication) {
+                // Applies the component for the release build variant.
                 from components.release
+
+                // You can then customize attributes of the publication as shown below.
+                groupId = 'com.github.converselabs'
+                artifactId = 'android-sdk'
+                version = '0.2.0'
             }
         }
     }
