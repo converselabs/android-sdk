@@ -3,7 +3,7 @@ plugins {
 }
 
 android {
-    namespace 'com.example.android_web_view_url_lib'
+    namespace 'com.deepconverse.android_sdk'
     compileSdk 33
 
     defaultConfig {

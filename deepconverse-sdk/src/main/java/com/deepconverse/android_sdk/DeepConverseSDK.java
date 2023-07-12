@@ -1,11 +1,11 @@
-package com.example.android_web_view_url_lib;
+package com.deepconverse.android_sdk;
 
 import android.content.Context;
+import android.net.Uri;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.webkit.ConsoleMessage;
 import android.webkit.JavascriptInterface;
-import android.webkit.ValueCallback;
 import android.webkit.WebChromeClient;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
@@ -18,11 +18,19 @@ import androidx.appcompat.widget.LinearLayoutCompat;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-public class WebUrlView extends LinearLayoutCompat {
+import java.util.Map;
+
+public class DeepConverseSDK extends LinearLayoutCompat {
 
     private WebView webView;
     private WebViewCallback webViewCallback; // Callback interface
     private WebViewLoadingCallback webViewLoadingCallback; // Callback interface
+
+    private String domain;
+
+    private String botName;
+
+    private Map<String, String> metadata;
 
     public interface WebViewCallback {
         void onViewClosed();
@@ -33,14 +41,23 @@ public class WebUrlView extends LinearLayoutCompat {
         void onUrlLoaded();
     }
 
-    public WebUrlView(@NonNull Context context) {
+    public DeepConverseSDK(@NonNull Context context, String domain, String botName,
+                           Map<String, String> metadata) {
         super(context);
+        this.domain = domain;
+        this.botName = botName;
+        this.metadata = metadata;
         init();
     }
 
-    public WebUrlView(@NonNull Context context, @Nullable AttributeSet attrs) {
+    public DeepConverseSDK(@NonNull Context context, @Nullable AttributeSet attrs,
+                           String domain, String botName, Map<String, String> metadata) {
         super(context, attrs);
+        this.domain = domain;
+        this.botName = botName;
+        this.metadata = metadata;
         init();
+
     }
 
     private void init() {
@@ -68,7 +85,17 @@ public class WebUrlView extends LinearLayoutCompat {
         this.webViewLoadingCallback = loadingCallback;
     }
 
-    public void loadUrl(String url) {
+    public void load() {
+        Uri.Builder builder = new Uri.Builder();
+        builder.scheme("https")
+                .authority("cdn.converseapps.com")
+                .appendPath("v1/assets/widget/embedded-chatbot")
+                .appendQueryParameter("hostname", this.domain + '-' + this.botName + ".deepconverse.com");
+        for (Map.Entry<String, String> set :metadata.entrySet()) {
+            builder.appendQueryParameter(set.getKey(), set.getValue());
+        }
+
+        String url = builder.build().toString();
         webView.loadUrl(url);
         webView.setWebViewClient(new WebViewClient() {
             @Override

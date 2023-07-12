@@ -8,8 +8,9 @@ implementation files('libs/android-web-view-url-lib-debug.aar')
 ```
 3. Sync your project with the Gradle files to ensure the library is successfully added to your project.
 4. Open your `MainActivity.java` file and import the required classes:
+
 ```java
-import com.example.android_web_view_url_lib.WebUrlView;
+import com.deepconverse.android_sdk.DeepConverseSDK;
 ```
 5. In your activity's layout file (`activity_main.xml`), make sure you have a `Button` and a `LinearLayout` container as defined in your code:
 ```java

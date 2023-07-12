@@ -1,4 +1,4 @@
-package com.example.webviewapp;
+package com.deepconverse.webviewapp;
 
 import org.junit.Test;
 

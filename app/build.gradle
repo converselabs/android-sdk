@@ -3,11 +3,11 @@ plugins {
 }
 
 android {
-    namespace 'com.example.webviewapp'
+    namespace 'com.deepconverse.webviewapp'
     compileSdk 33
 
     defaultConfig {
-        applicationId "com.example.webviewapp"
+        applicationId "com.deepconverse.webviewapp"
         minSdk 23
         targetSdk 33
         versionCode 1
