@@ -63,8 +63,6 @@ public class DeepConverseSDK extends LinearLayoutCompat {
     private void init() {
         webView = new WebView(getContext());
 
-        WebView.setWebContentsDebuggingEnabled(true);
-
         webView.setLayoutParams(new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT));
         webView.setWebViewClient(new WebViewClient());
 
