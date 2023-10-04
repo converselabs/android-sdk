@@ -15,6 +15,8 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.widget.LinearLayoutCompat;
 
+import com.google.gson.Gson;
+
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -84,17 +86,16 @@ public class DeepConverseSDK extends LinearLayoutCompat {
     }
 
     public void load() {
-        Uri.Builder builder = new Uri.Builder();
-        builder.scheme("https")
-                .authority("cdn.converseapps.com")
-                .appendPath("v1/assets/widget/embedded-chatbot")
-                .appendQueryParameter("hostname", this.domain + '-' + this.botName + ".deepconverse.com");
-        for (Map.Entry<String, String> set :metadata.entrySet()) {
-            builder.appendQueryParameter(set.getKey(), set.getValue());
-        }
 
-        String url = builder.build().toString();
+        String DEEPCONVERSE_HOST = "cdn.deepconverse.com";
+        String url = "https://" + DEEPCONVERSE_HOST + "/v1/assets/widget/embedded-chatbot?"
+                + "hostname=" + this.domain + '-' + this.botName + ".deepconverse.com";
+
         webView.loadUrl(url);
+        Log.i("DeepConverseSDK", "URL:" + url);
+        Gson gson = new Gson();
+        String metadataJSON = gson.toJson(metadata);
+        Log.i("DeepConverseSDK", "Metadata:" + metadataJSON);
         webView.setWebViewClient(new WebViewClient() {
             @Override
             public void onPageStarted(WebView view, String url, android.graphics.Bitmap favicon) {
@@ -109,6 +110,7 @@ public class DeepConverseSDK extends LinearLayoutCompat {
                     webViewLoadingCallback.onUrlLoaded(); // Invoke the callback method
                 }
 
+                webView.evaluateJavascript("setTimeout(function () {var evt = new CustomEvent('botWidgetInit', { detail: " + metadataJSON +  " });document.dispatchEvent(evt);}, 100)", null);
                 // Execute JavaScript after the page finishes loading
                 webView.evaluateJavascript("document.addEventListener('dc.bot', function(event) { " +
                         "console.log('Event', event.detail); " +
@@ -119,7 +121,7 @@ public class DeepConverseSDK extends LinearLayoutCompat {
         webView.setWebChromeClient(new WebChromeClient() {
             @Override
             public boolean onConsoleMessage(ConsoleMessage consoleMessage) {
-                Log.d("WebViewConsole", consoleMessage.message());
+                Log.i("DeepConverseSDK_WebView", consoleMessage.message());
                 return true;
             }
         });
@@ -138,10 +140,10 @@ public class DeepConverseSDK extends LinearLayoutCompat {
             // Handle the custom event string received from the web page
             try {
                 JSONObject eventData = new JSONObject(eventObject);
-                Log.d("WebUrlViewEvent", "Received event: " + eventObject.toString());
+                Log.d("DeepConverseSDK", "Received event: " + eventObject.toString());
                 String action = eventData.getString("action");
 
-                Log.d("ACTION", "Action: " + action);
+                Log.d("DeepConverseSDK", "Action: " + action);
 
                 if (action.equals("minimize") || action.equals("close")) {
                     if (webViewCallback != null) {
@@ -150,7 +152,7 @@ public class DeepConverseSDK extends LinearLayoutCompat {
                 }
                 // Handle the JSON object received from the web page
             } catch (JSONException e) {
-                Log.e("WebUrlViewEvent", "Error parsing event object: " + e.getMessage());
+                Log.e("DeepConverseSDK", "Error parsing event object: " + e.getMessage());
             }
         }
     }

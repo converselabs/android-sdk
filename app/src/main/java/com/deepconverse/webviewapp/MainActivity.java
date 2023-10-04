@@ -8,6 +8,7 @@ import android.widget.LinearLayout;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.deepconverse.android_sdk.DeepConverseSDK;
+import com.google.gson.Gson;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -38,6 +39,8 @@ public class MainActivity extends AppCompatActivity implements DeepConverseSDK.W
 
                 // Create a new instance of WebUrlView
                 Map<String, String> metadata = new HashMap<>();
+                Gson gson = new Gson();//
+                metadata = gson.fromJson("{\"country\":\"US\", \"email\": \"bob@ose.io\"}", Map.class);
                 metadata.put("draft", "true");
                 deepConverseSDK = new DeepConverseSDK(MainActivity.this, "dcstg5",
                         "preshin-19", metadata);
