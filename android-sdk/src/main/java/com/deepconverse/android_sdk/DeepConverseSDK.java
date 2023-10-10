@@ -1,6 +1,7 @@
 package com.deepconverse.android_sdk;
 
 import android.content.Context;
+import android.content.Intent;
 import android.net.Uri;
 import android.util.AttributeSet;
 import android.util.Log;
@@ -97,6 +98,13 @@ public class DeepConverseSDK extends LinearLayoutCompat {
         String metadataJSON = gson.toJson(metadata);
         Log.i("DeepConverseSDK", "Metadata:" + metadataJSON);
         webView.setWebViewClient(new WebViewClient() {
+            @Override
+            public boolean shouldOverrideUrlLoading(WebView view, String url) {
+                Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
+                view.getContext().startActivity(intent);
+                return true;
+            }
+
             @Override
             public void onPageStarted(WebView view, String url, android.graphics.Bitmap favicon) {
                 if (webViewLoadingCallback != null) {
