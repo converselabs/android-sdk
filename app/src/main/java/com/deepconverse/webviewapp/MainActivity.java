@@ -1,6 +1,7 @@
 package com.deepconverse.webviewapp;
 
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.LinearLayout;
@@ -8,11 +9,9 @@ import android.widget.LinearLayout;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.deepconverse.android_sdk.DeepConverseSDK;
-import com.google.gson.Gson;
 
 import java.util.HashMap;
 import java.util.Map;
-
 
 public class MainActivity extends AppCompatActivity implements DeepConverseSDK.WebViewCallback {
 
@@ -32,26 +31,36 @@ public class MainActivity extends AppCompatActivity implements DeepConverseSDK.W
             @Override
             public void onClick(View v) {
                 if (deepConverseSDK != null) {
-                    // Remove the existing WebUrlView if present
-                    webUrlContainer.removeView(deepConverseSDK);
-                    deepConverseSDK.destroyView();
+                    cleanUpDeepConverseSDK();
                 }
 
-                // Create a new instance of WebUrlView
+                // Create metadata
                 Map<String, String> metadata = new HashMap<>();
-                Gson gson = new Gson();//
-                metadata = gson.fromJson("{\"country\":\"US\", \"email\": \"bob@ose.io\"}", Map.class);
+                metadata.put("country", "US");
+                metadata.put("email", "bob@ose.io");
                 metadata.put("draft", "true");
+
+                // Initialize DeepConverseSDK
                 deepConverseSDK = new DeepConverseSDK(MainActivity.this, "dcstg5",
                         "preshin-19", metadata);
+
                 deepConverseSDK.setLayoutParams(new LinearLayout.LayoutParams(
                         LinearLayout.LayoutParams.MATCH_PARENT,
                         LinearLayout.LayoutParams.MATCH_PARENT));
+
+                // Set callbacks
                 deepConverseSDK.setWebViewCallback(MainActivity.this);
+                deepConverseSDK.setBotEventListener(new DeepConverseSDK.BotEventListener() {
+                    @Override
+                    public void onBotEvent(org.json.JSONObject eventData) {
+                        Log.d("MyApp", "Bot Event: " + eventData.toString());
+                        // Handle bot events here
+                    }
+                });
+
+                // Load the bot and add to container
                 deepConverseSDK.load();
                 webUrlContainer.addView(deepConverseSDK);
-
-                // Show the webUrlContainer and trigger a layout pass
                 webUrlContainer.setVisibility(View.VISIBLE);
                 webUrlContainer.requestLayout();
             }
@@ -60,7 +69,10 @@ public class MainActivity extends AppCompatActivity implements DeepConverseSDK.W
 
     @Override
     public void onViewClosed() {
-        // Remove the WebUrlView from the container
+        cleanUpDeepConverseSDK();
+    }
+
+    private void cleanUpDeepConverseSDK() {
         if (deepConverseSDK != null) {
             webUrlContainer.removeView(deepConverseSDK);
             deepConverseSDK.destroyView();
